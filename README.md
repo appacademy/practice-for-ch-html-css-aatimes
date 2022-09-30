@@ -31,22 +31,22 @@ By the end of this project, you should be able to
 
 - Navigate to the root directory and `bundle install`.
 - Run `chmod +x bin/dev` in your terminal to make `bin/dev` executable.
-- Run `rails dartsass:build` in your terminal to create an initial build of your CSS.
+- Run `rails dartsass:build` in your terminal to create an initial CSS build.
 - Run `bin/dev` in your terminal.
 - Open [`localhost:3000`] to see the site you're working on.
 
 The `bin/dev` command uses [`foreman`] to run your Rails server and
 `dartsass:watch` with a single command. (These commands are specified in the
 __Procfile.dev__ file.) As you might expect, `dartsass:watch` essentially
-watches your __.scss__ files and updates the __application.css__ in your
+watches your __.scss__ files. It also updates the __application.css__ in your
 __app/assets/builds__ folder whenever they change.
 
 Updating your build file on any change is great, but you'd probably also like to
 see the changes appear in your browser. To make that happen, the project uses
 the [`rails_live_reload`] gem, which triggers a (full) refresh in the browser
-whenever your __application.css__ build file changes. Although this gem
-currently offers the best solution for browser refreshing with Rails 7, it
-unfortunately also comes with a potential issue.
+whenever your __application.css__ build file or any of the partials in
+__views/shared__ change. Unfortunately, this gem also comes with a
+potential issue.
 
 The `rails_live_reload` gem creates a socket connection with the browser. If
 your project's path is too long--the full socket file path cannot be more than
@@ -57,10 +57,7 @@ project will exit. If you get this error, you have 2 potential ways forward:
    shorter and do your work there.
 2. Remove the `rails_live_reload` gem from your __Gemfile__ and `bundle
    install`. Note that if you choose this option, you will have to refresh your
-   browser manually to see any changes. (Since the gem initiates a full refresh
-   for every change, this option is perhaps not as bad as it might seem at
-   first. You just have to click the refresh button manually every time you want
-   to see a change.)
+   browser manually to see any changes.
 
 [`localhost:3000`]: http://localhost:3000
 [`foreman`]: https://github.com/ddollar/foreman
@@ -77,25 +74,31 @@ sanity as more styles are added over the app's lifespan.
 ```text
 /app/assets/stylesheets
 +-- base
-|   +-- colors.scss
-|   +-- fonts.scss
 |   +-- layout.scss
 |   +-- reset.scss
 +-- components
 |   +-- _gear_dropdown.scss
+|   +-- _index.scss
 |   +-- _main_content.scss
 |   +-- _main_nav.scss
 |   +-- _masthead.scss
 |   +-- _search_modal.scss
 |   +-- _sections_nav.scss
 |   +-- _sections_sidebar.scss
++-- variables
+|   +-- colors.scss
+|   +-- fonts.scss
+|   +-- index.scss
 +-- application.scss
 ```
 
-These are all Sass (SCSS) files rather than straight-up CSS; the
-[`dartsass-rails`] gem enables your app to process them.
+These are all Sass (SCSS) files rather than straight-up CSS. The `build` and
+`watch` commands in the [`dartsass-rails`] gem compile these Sass files into a
+single CSS file--__app/assets/builds/application.css__--that your app can then
+use. As designated in __assets/config/manifest.js__, this CSS file is
+then what the [Rails Asset Pipeline] serves up.
 
-Next take a look at the __app/assets/stylesheets/application.scss__ file:
+Next, take a look at the __app/assets/stylesheets/application.scss__ file:
 
 ```scss
 // CSS Reset
@@ -111,12 +114,12 @@ Next take a look at the __app/assets/stylesheets/application.scss__ file:
 This file uses SCSS's [`@use`] to define all the styles that will apply to your
 entire application and enforce the importing of these stylesheets in a
 particular order. You can think of __application.scss__ as building all the
-imported files into one giant CSS file.
+imported files into one giant SCSS file.
 
 The file imports all of the components by referencing the directory name: `@use
 "components";`. When given a directory to `use`, Sass will look for an
 __index.scss__  (or __\_index.scss__) inside that directory to import. In the
-case of __components__, the __index.scss__ simply `forward`s all of the
+case of __components__, the __\_index.scss__ simply `forward`s all of the
 different components. [`@forward`] works similarly to `@use` except that it
 makes the module being imported into __\_index.scss__ available to files that
 `use` __\_index.scss__ as well.
@@ -176,7 +179,7 @@ namespace: `variables.$serif`, `variables.$gray`.
   You'll use the images found in __screenshots__ for your mockups as you are
   styling. __copy__ contains the text you'll copy and paste for the app's
   content.
-- **Pro Tip**: Keep each mockup open and use it for reference as you're styling
+- **Pro Tip:** Keep each mockup open and use it for reference as you're styling
   a component.
 - HTML is rendered using Rails partials in the
   __app/views/static_pages/index.html.erb__ file, allowing for the styling of
@@ -395,7 +398,8 @@ box-shadow: -1px 4px 6px 1px rgba(0, 0, 0, 0.09);
 
 ## Head to Part 2!
 
-Once you have finished Phases 1-3, head over to Part Two.
+Once you have finished Phases 1-3, **commit your code** and continue on to
+Phases 4-6 in Part 2.
 
 [layout-mock]: https://assets.aaonline.io/fullstack/html-css/projects/aa_times/solution/docs/screenshots/main_content.jpg
 [main-nav-mock]:https://assets.aaonline.io/fullstack/html-css/projects/aa_times/solution/docs/screenshots/main_nav.jpg
