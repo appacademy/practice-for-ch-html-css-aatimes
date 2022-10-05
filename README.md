@@ -31,7 +31,6 @@ By the end of this project, you should be able to
 
 - Navigate to the root directory and `bundle install`.
 - Run `chmod +x bin/dev` in your terminal to make `bin/dev` executable.
-- Run `rails dartsass:build` in your terminal to create an initial CSS build.
 - Run `bin/dev` in your terminal.
 - Open [`localhost:3000`] to see the site you're working on.
 
